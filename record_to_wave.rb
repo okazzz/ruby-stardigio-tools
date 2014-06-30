@@ -1,4 +1,4 @@
-
+require "json"
 require "coreaudio"
 
 dev = CoreAudio.default_input_device
@@ -19,11 +19,12 @@ th = Thread.start do
       wav.write(w)
       w = buf.read(4096)
     end
-    p mutecount
+    p mutecount if mutecount != 0
     if mutecount > 10 then
         wav.close
         filename = "music#{Time.now.strftime('%F-%H%M%S')}.m4v"
         p filename
+        p JSON.load(`wget http://www.stardigio.com/playingtop?toppid=401 -O-`)[1]
         wav = CoreAudio::AudioFile.new(filename, :write, :format => :m4a,
                                :rate => dev.nominal_rate,
                                :channels => dev.input_stream.channels)
