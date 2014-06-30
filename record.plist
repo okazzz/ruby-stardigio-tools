@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+    <string>jp.oka.record</string>
+      <key>ProgramArguments</key>
+        <array>
+            <string>/usr/bin/ruby</string>
+            <string>/Users/oka_zzz/work/stardigio/record_to_wave.rb</string>
+        </array>
+        <key>StartCalendarInterval</key>
+        <dict>
+          <key>Hour</key>
+            <integer>0</integer>
+          <key>Minute</key>
+          <integer>0</integer>
+      </dict>
+      <key>WorkingDirectory</key>
+      <string>/Users/oka_zzz/work/stardigio/music/</string>
+</dict>
+</plist>
