@@ -1,10 +1,15 @@
-require "json"
-require "coreaudio"
+#!/usr/bin/ruby
+#
+require 'json'
+require 'taglib'
+require 'coreaudio'
 
 dev = CoreAudio.default_input_device
 buf = dev.input_buffer(1024)
 
-wav = CoreAudio::AudioFile.new("music#{Time.now.strftime('%F-%H%M%S')}.m4v", :write, :format => :m4a,
+playing_info = nil
+filename = "music#{Time.now.strftime('%F-%H%M%S')}_start.m4a"
+wav = CoreAudio::AudioFile.new(filename, :write, :format => :m4a,
                                :rate => dev.nominal_rate,
                                :channels => dev.input_stream.channels)
 
@@ -22,9 +27,25 @@ th = Thread.start do
     p mutecount if mutecount != 0
     if mutecount > 10 then
         wav.close
-        filename = "music#{Time.now.strftime('%F-%H%M%S')}.m4v"
+
+        unless playing_info.nil? or playing_info["PL_TITLE"] == "" then
+          title  = playing_info["PL_TITLE"].gsub("/ \uff5e.*\uff5e/", '')
+          artist = playing_info["PL_ARTIST"]
+	  p title
+          p artist
+          TagLib::MP4::File.open(filename) do |mp4|
+            mp4.tag.title  = title
+            mp4.tag.artist = artist
+            mp4.tag.album  = title
+            mp4.tag.comment= Time.now.strftime('%F') + "from SKY"
+            mp4.save
+          end
+        end
+
+        filename = "music#{Time.now.strftime('%F-%H%M%S')}.m4a"
         p filename
-        p JSON.load(`wget http://www.stardigio.com/playingtop?toppid=401 -O-`)[1]
+        playing_info =  JSON.load(`wget http://www.stardigio.com/playingtop?toppid=401 -O-`)[1]
+        p playing_info
         wav = CoreAudio::AudioFile.new(filename, :write, :format => :m4a,
                                :rate => dev.nominal_rate,
                                :channels => dev.input_stream.channels)
@@ -49,6 +70,8 @@ $stdout.puts "done."
 th.kill.join
 
 wav.close
+File.unlink(filename)
+
 
 puts "#{samples} samples read."
 puts "#{buf.dropped_frame} frame dropped."
