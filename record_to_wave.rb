@@ -29,7 +29,7 @@ th = Thread.start do
         wav.close
 
         unless playing_info.nil? or playing_info["PL_TITLE"] == "" then
-          title  = playing_info["PL_TITLE"].gsub("/ \uff5e.*\uff5e/", '')
+          title  = playing_info["PL_TITLE"].gsub(/ \uff5e.*\uff5e/, '')
           artist = playing_info["PL_ARTIST"]
 	  p title
           p artist
