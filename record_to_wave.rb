@@ -15,17 +15,21 @@ wav = CoreAudio::AudioFile.new(filename, :write, :format => :m4a,
 
 samples = 0
 th = Thread.start do
+  Silent = NArray.sint(dev.input_stream.channels, 4096)
+  mutecount = 0
+
   loop do
     w = buf.read(4096)
-    mutecount = 0
-    while w == NArray.sint(2, 4096) do
+
+    if w == Silent then
+      puts "no signal\n"
       mutecount += 1
-      samples += w.size / dev.input_stream.channels
-      wav.write(w)
-      w = buf.read(4096)
+    elsif mutecount != 0 then
+      puts "mute: #{mutecount}"
+      mutecount = 0
     end
-    p mutecount if mutecount != 0
-    if mutecount > 10 then
+
+    if mutecount > 20 then
         wav.close
 
         unless playing_info.nil? or playing_info["PL_TITLE"] == "" then
@@ -40,19 +44,32 @@ th = Thread.start do
             mp4.tag.comment= Time.now.strftime('%F') + "from SKY"
             mp4.save
           end
+	else
+	  puts "playing info not found"
         end
 
         filename = "music#{Time.now.strftime('%F-%H%M%S')}.m4a"
         p filename
-        playing_info =  JSON.load(`wget http://www.stardigio.com/playingtop?toppid=401 -O-`)[1]
-        p playing_info
         wav = CoreAudio::AudioFile.new(filename, :write, :format => :m4a,
                                :rate => dev.nominal_rate,
                                :channels => dev.input_stream.channels)
-        wav.write(NArray.sint(2, 4096))
-        wav.write(w)
-        w = buf.read(4096) while w == NArray.sint(2, 4096)
+        wav.write(Silent)
+        wav.write(Silent)
+
+	puts "waiting for playing music"
+	while w == Silent do
+	  puts "no signal"
+          mutecount += 1
+	  samples += w.size / dev.input_stream.channels
+	  w = buf.read(4096)
+	end
+	puts "mute: #{mutecount}"
+        mutecount = 0
+
+	playing_info =  JSON.load(`wget http://www.stardigio.com/playingtop?toppid=401 -O-`)[1]
+        p playing_info
     end
+
     samples += w.size / dev.input_stream.channels
     wav.write(w)
   end
