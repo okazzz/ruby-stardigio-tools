@@ -2,21 +2,24 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-  <key>Label</key>
-    <string>jp.oka.record</string>
-      <key>ProgramArguments</key>
-        <array>
-            <string>/usr/bin/ruby</string>
-            <string>/Users/oka_zzz/work/stardigio/record_to_wave.rb</string>
-        </array>
-        <key>StartCalendarInterval</key>
-        <dict>
-          <key>Hour</key>
-            <integer>0</integer>
-          <key>Minute</key>
-          <integer>0</integer>
-      </dict>
-      <key>WorkingDirectory</key>
-      <string>/Users/oka_zzz/work/stardigio/music/</string>
+	<key>Disabled</key>
+	<string>0</string>
+	<key>Label</key>
+	<string>jp.oka.record</string>
+	<key>OnDemand</key>
+	<string>0</string>
+	<key>ProgramArguments</key>
+	<array>
+    <string>/Users/oka_zzz/prg/stardigio/ruby-stardigio-tools/run.sh</string>
+	</array>
+	<key>StartCalendarInterval</key>
+	<dict>
+		<key>Hour</key>
+		<integer>23</integer>
+		<key>Minute</key>
+		<integer>59</integer>
+	</dict>
+	<key>WorkingDirectory</key>
+	<string>/Users/oka_zzz/stardigio/</string>
 </dict>
 </plist>
