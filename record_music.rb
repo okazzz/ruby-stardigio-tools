@@ -23,6 +23,13 @@ th = Thread.start do
                                      :rate => dev.nominal_rate,
                                      :channels => dev.input_stream.channels)
 
+      wav.write(Silent)
+      wav.write(Silent)
+      wav.write(Silent)
+      wav.write(Silent)
+      wav.write(Silent)
+      wav.write(Silent)
+
       puts "waiting for playing next music"
       while mutecount < 15 do
         mutecount = 0
