@@ -78,7 +78,7 @@ th = Thread.start do
               mp4.tag.title  = title
               mp4.tag.artist = artist
               mp4.tag.album  = title
-              mp4.tag.comment= Time.now.strftime('%F') + "from SKY"
+              mp4.tag.comment= Time.now.strftime('%F') + " from SKY"
               mp4.save
             end
           else
